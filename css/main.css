@@ -126,10 +126,11 @@ body {
   z-index: 4;
 }
 
+/* Updated player-cover styles */
 .player-cover {
-  width: 300px;
-  height: 300px;
-  margin-left: -70px;
+  width: 220px;  /* Reduced width to make it smaller */
+  height: 220px; /* Reduced height for better fitting */
+  margin-left: -50px; /* Adjust the negative margin to position it properly */
   flex-shrink: 0;
   position: relative;
   z-index: 1;
@@ -139,7 +140,7 @@ body {
 .player-cover__item {
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: contain; /* Ensure the image is fully contained within the container */
   width: 100%;
   height: 100%;
   border-radius: 15px;
@@ -148,38 +149,10 @@ body {
   top: 0;
 }
 
-.player-cover__item:before {
-  content: "";
-  background: inherit;
-  width: 100%;
-  height: 100%;
-  box-shadow: 0px 10px 40px 0px rgba(76, 70, 124, 0.5);
-  display: block;
-  z-index: 1;
-  position: absolute;
-  top: 30px;
-  transform: scale(0.9);
-  filter: blur(10px);
-  opacity: 0.9;
-  border-radius: 15px;
-}
-
-.player-cover__item:after {
-  content: "";
-  background: inherit;
-  width: 100%;
-  height: 100%;
-  box-shadow: 0px 10px 40px 0px rgba(76, 70, 124, 0.5);
-  display: block;
-  z-index: 2;
-  position: absolute;
-  border-radius: 15px;
-}
-
 .player-cover__img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover;  /* Ensure image scales proportionally */
   border-radius: 15px;
   box-shadow: 0px 10px 40px 0px rgba(76, 70, 124, 0.5);
   user-select: none;
@@ -300,6 +273,7 @@ body {
   flex: 1;
   padding-right: 60px;
   user-select: none;
+  padding-left: 20px; /* Add some space between the cover image and the text */
 }
 
 .album-info__name {
@@ -311,7 +285,7 @@ body {
 
 .album-info__track {
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px; /* Reduced font size for better readability */
   opacity: 0.7;
   line-height: 1.3em;
   min-height: 52px;
