@@ -9,39 +9,27 @@ new Vue({
       currentTime: null,
       isTimerPlaying: false,
       tracks: [
-        {
-          name: "Mekanın Sahibi",
-          artist: "Norm Ender",
-          cover: "img/1.jpg",
-          source: "mp3/1.mp3",
-        },
-        {
-          name: "Everybody Knows",
-          artist: "Leonard Cohen",
-          cover: "img/2.jpg",
-          source: "mp3/2.mp3",
-        },
-        {
-          name: "Extreme Ways",
-          artist: "Moby",
-          cover: "img/3.jpg",
-          source: "mp3/3.mp3",
-        }
+        { name: "Mekanın Sahibi", artist: "Norm Ender", cover: "img/1.jpg", source: "mp3/1.mp3" },
+        { name: "Everybody Knows", artist: "Leonard Cohen", cover: "img/2.jpg", source: "mp3/2.mp3" },
+        { name: "Extreme Ways", artist: "Moby", cover: "img/3.jpg", source: "mp3/3.mp3" }
       ],
       currentTrack: null,
       currentTrackIndex: 0,
-      transitionName: null
+      transitionName: null,
+      isShowCover: true
     };
   },
-  
+
   methods: {
     play() {
-      if (this.audio.paused) {
-        this.audio.play();
-        this.isTimerPlaying = true;
-      } else {
-        this.audio.pause();
-        this.isTimerPlaying = false;
+      if (this.audio) {
+        if (this.audio.paused) {
+          this.audio.play();
+          this.isTimerPlaying = true;
+        } else {
+          this.audio.pause();
+          this.isTimerPlaying = false;
+        }
       }
     },
 
@@ -49,7 +37,7 @@ new Vue({
       let width = (100 / this.audio.duration) * this.audio.currentTime;
       this.barWidth = width + "%";
       this.circleLeft = width + "%";
-      
+
       let durmin = Math.floor(this.audio.duration / 60);
       let dursec = Math.floor(this.audio.duration - durmin * 60);
       let curmin = Math.floor(this.audio.currentTime / 60);
@@ -67,9 +55,9 @@ new Vue({
     updateBar(x) {
       let progress = this.$refs.progress;
       let maxduration = this.audio.duration;
-      let position = x - progress.offsetLeft;
+      let position = x - progress.getBoundingClientRect().left;
       let percentage = (100 * position) / progress.offsetWidth;
-      
+
       if (percentage > 100) percentage = 100;
       if (percentage < 0) percentage = 0;
 
@@ -88,13 +76,13 @@ new Vue({
     prevTrack() {
       this.transitionName = "scale-in";
       this.isShowCover = false;
-      
+
       if (this.currentTrackIndex > 0) {
         this.currentTrackIndex--;
       } else {
         this.currentTrackIndex = this.tracks.length - 1;
       }
-      
+
       this.currentTrack = this.tracks[this.currentTrackIndex];
       this.resetPlayer();
     },
@@ -119,6 +107,7 @@ new Vue({
       this.audio.currentTime = 0;
       this.audio.src = this.currentTrack.source;
 
+      this.audio.load();
       setTimeout(() => {
         if (this.isTimerPlaying) {
           this.audio.play();
@@ -129,6 +118,9 @@ new Vue({
     },
 
     favorite() {
+      if (typeof this.tracks[this.currentTrackIndex].favorited === 'undefined') {
+        this.tracks[this.currentTrackIndex].favorited = false;
+      }
       this.tracks[this.currentTrackIndex].favorited = !this.tracks[this.currentTrackIndex].favorited;
     }
   },
@@ -147,12 +139,12 @@ new Vue({
       vm.generateTime();
     };
 
-    this.audio.onended = function() {
+    this.audio.onended = () => {
       vm.nextTrack();
-      this.isTimerPlaying = true;
+      vm.isTimerPlaying = false;
     };
 
-    // This is optional (for preload covers)
+    // Preload cover images
     for (let index = 0; index < this.tracks.length; index++) {
       const element = this.tracks[index];
       let link = document.createElement('link');
