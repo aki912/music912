@@ -134,24 +134,8 @@ new Vue({
     this.audio.ontimeupdate = function() {
       vm.generateTime();
     };
-
-    this.audio.onloadedmetadata = function() {
-      vm.generateTime();
-    };
-
-    this.audio.onended = () => {
+    this.audio.onended = function() {
       vm.nextTrack();
-      vm.isTimerPlaying = false;
     };
-
-    // Preload cover images
-    for (let index = 0; index < this.tracks.length; index++) {
-      const element = this.tracks[index];
-      let link = document.createElement('link');
-      link.rel = "prefetch";
-      link.href = element.cover;
-      link.as = "image";
-      document.head.appendChild(link);
-    }
   }
 });
